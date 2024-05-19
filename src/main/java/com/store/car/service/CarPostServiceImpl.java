@@ -3,6 +3,7 @@ package com.store.car.service;
 import com.store.car.dto.CarPostDto;
 import com.store.car.repository.CarPostRepository;
 import com.store.car.repository.OwnerPostRepository;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,11 +35,14 @@ public class CarPostServiceImpl implements CarPostService {
 
     @Override
     public void changeCarSale(CarPostDto dto, Long id) {
-
+        var carEntity = carPostRepository.findById(id)
+                .orElseThrow();
+        BeanUtils.copyProperties(dto, carEntity);
+        carPostRepository.save(carEntity);
     }
 
     @Override
     public void removeCarSale(Long id) {
-
+        carPostRepository.deleteById(id);
     }
 }
